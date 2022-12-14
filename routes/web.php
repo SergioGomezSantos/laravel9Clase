@@ -22,7 +22,13 @@ Route::get('/prueba/{id?}', function ($id = 'default') {
     echo "Id: $id";
 });
 
-Route::get('studies', [StudiesController::class, 'index']);
-Route::get('studies/create', [StudiesController::class, 'create']);
-Route::get('studies/{id}', [StudiesController::class, 'show']);
-Route::get('studies/{id}/edit', [StudiesController::class, 'edit']);
+// Route::get('studies', [StudiesController::class, 'index']);
+// Route::get('studies/create', [StudiesController::class, 'create']);
+// Route::get('studies/{id}', [StudiesController::class, 'show']);
+// Route::get('studies/{id}/edit', [StudiesController::class, 'edit']);
+
+// Route::post('studies', [StudiesController::class, 'store']);
+// Route::put('studies/{id}', [StudiesController::class, 'put']);
+// Route::delete('studies/{id}', [StudiesController::class, 'delete']);
+
+Route::resource('/studies', StudiesController::class);
