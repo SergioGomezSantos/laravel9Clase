@@ -13,7 +13,7 @@ class StudiesController extends Controller
      */
     public function index()
     {
-        echo "index";
+        echo "Index";
     }
 
     /**
