@@ -7,9 +7,15 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth:api");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +23,14 @@ class ProductController extends Controller
      */
     public function index()
     {
+
+        $user = Auth::user();
+
+        if (!$user->can('viewAny', Product::class)) {
+
+            return response()->json(['status' => 'error', 'message' => 'Sin permisos'], 403);
+        }
+
         return response()->json(['status' => 'OK', 'data' => Product::all()], 200);
     }
 
