@@ -21,10 +21,10 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('nif');
-            $table->integer('room_number');
-            $table->boolean('physiotherapy');
-            $table->integer('max_capacity');
-            $table->boolean('unisex');
+            $table->integer('room_number')->nullable();
+            $table->boolean('physiotherapy')->nullable();
+            $table->integer('max_capacity')->nullable();
+            $table->boolean('unisex')->nullable();
             $table->timestamps();
         });
     }
