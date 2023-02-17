@@ -46,7 +46,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->authorize("create", Product::class);
+        $this->authorize("create", Product::class);
 
         $request->validate([
             "nombre" => "required|max:100",
@@ -115,7 +115,6 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        $this->authorize("update", Product::class);
         
         if ($product) {
 
