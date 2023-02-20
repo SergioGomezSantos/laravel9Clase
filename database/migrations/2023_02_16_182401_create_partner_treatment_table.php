@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('partner_id')->references('id')->on('partners');
             $table->unsignedBigInteger('treatment_id');
             $table->foreign('treatment_id')->references('id')->on('treatments');
-            $table->dateTime('date');
+            $table->date('date');
             $table->timestamps();
         });
     }
