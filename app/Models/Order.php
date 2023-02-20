@@ -14,4 +14,10 @@ class Order extends Model
         // return $this->belongsTo(Cliente::class);
         return $this->belongsToMany(Cliente::class);
     }
+
+    protected $dates = ['fecha', ];
+
+    // $user->fecha->format('d-m-Y')
+    // $user->fecha->addDays(30)
+    // $fecha->diffInDays($dt->copy()->addMonth())
 }
