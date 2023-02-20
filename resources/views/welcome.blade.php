@@ -45,7 +45,7 @@
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div class="material-icons text-gray-500">person</div>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="#" class="underline text-gray-900 dark:text-white">Formulario Login</a></div>
+                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="/login" class="underline text-gray-900 dark:text-white">Formulario Login</a></div>
                             </div>
 
                             <div class="ml-12">
@@ -58,7 +58,7 @@
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
                             <div class="flex items-center">
                                 <div class="material-icons text-gray-500">menu</div>    
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="#" class="underline text-gray-900 dark:text-white">CRUD Socios</a></div>
+                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="/socios" class="underline text-gray-900 dark:text-white">CRUD Socios</a></div>
                             </div>
 
                             <div class="ml-12">

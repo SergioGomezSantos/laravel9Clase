@@ -24,7 +24,7 @@ class WorkerFactory extends Factory
         $this->faker->addProvider(new Person_ES($this->faker));
 
         return [
-            "name" => $this->faker->name(),
+            "name" => $this->faker->unique()->firstName,
             "password" => $this->faker->password(),
             "role" => $this->faker->randomElement(["admin","manager"]),
             "center_id" => Center::inRandomOrder()->first()->id
