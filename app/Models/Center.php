@@ -10,14 +10,14 @@ class Center extends Model
     use HasFactory;
 
     public function workers(){
-        return $this->hasMany(Worker::class)->withPivot('date');;
+        return $this->hasMany(Worker::class);
     }
 
     public function partners(){
-        return $this->belongsToMany(Partner::class);
+        return $this->belongsToMany(Partner::class)->withTimestamps();
     }
 
     public function treatments(){
-        return $this->belongsToMany(Treatment::class);
+        return $this->belongsToMany(Treatment::class)->withTimestamps();
     }
 }

@@ -10,10 +10,10 @@ class Partner extends Model
     use HasFactory;
 
     public function centers(){
-        return $this->belongsToMany(Center::class);
+        return $this->belongsToMany(Center::class)->withTimestamps();
     }
 
     public function treatments(){
-        return $this->belongsToMany(Treatment::class);
+        return $this->belongsToMany(Treatment::class)->withPivot('date')->withTimestamps();
     }
 }

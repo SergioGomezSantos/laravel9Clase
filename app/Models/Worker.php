@@ -10,6 +10,6 @@ class Worker extends Model
     use HasFactory;
 
     public function center(){
-        return $this->belongsTo(Center::class)->withPivot('date');;
+        return $this->belongsTo(Center::class);
     }
 }
