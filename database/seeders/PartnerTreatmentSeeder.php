@@ -25,6 +25,7 @@ class PartnerTreatmentSeeder extends Seeder
             );
 
             //TODO sync con tratamientos de su centro
+            
         });
     }
 }
