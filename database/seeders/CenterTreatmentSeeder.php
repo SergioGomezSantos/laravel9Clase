@@ -16,11 +16,10 @@ class CenterTreatmentSeeder extends Seeder
      */
     public function run()
     {
-        $treatments = Treatment::all();
         $centers = Center::all();
 
-        foreach ($treatments as $treatment) {
+        Treatment::factory()->count(23)->create()->each(function($treatment) use ($centers){
             $treatment->centers()->sync($centers->random(2));
-        }
+        });
     }
 }

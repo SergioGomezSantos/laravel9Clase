@@ -17,15 +17,18 @@ class PartnerTreatmentSeeder extends Seeder
      */
     public function run()
     {
-        Treatment::factory()->count(23)->create()->each(function($treatment){
-            
+        $treatments = Treatment::all();
+
+        foreach ($treatments as $treatment) {
+
+            $id = $treatment->centers()->first()->id;
+
             $treatment->partners()->syncWithPivotValues(
-                Partner::all()->random(10)->pluck('id')->toArray(),
+                Partner::whereHas('centers', function($center) use ($id) {
+                    $center->where('center_id', '=', $id);
+                })->get()->random(5)->pluck('id')->toArray(),
                 ["date" => new DateTime()]
             );
-
-            //TODO sync con tratamientos de su centro
-            
-        });
+        }
     }
 }

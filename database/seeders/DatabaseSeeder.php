@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             CenterSeeder::class,
             WorkerSeeder::class,
             CenterPartnerSeeder::class,
-            PartnerTreatmentSeeder::class,
-            CenterTreatmentSeeder::class
+            CenterTreatmentSeeder::class,
+            PartnerTreatmentSeeder::class
         ]);
     }
 }
