@@ -20,7 +20,25 @@ class ProductoController extends Controller
 
     public function indexhtml()
     {
-        echo "aa";
+        return '
+            <table class="table table-striped table-bordered text-center">
+                <tbody id="myTbody">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <!-- <th>Fecha Creación</th> -->
+                        <!-- <th>Fecha Actualización</th> -->
+                    </tr>
+                </tbody>
+            </table>
+        ';
+    }
+
+    public function indexjson()
+    {
+        return response()->json(Product::all());
     }
 
 

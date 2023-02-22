@@ -48,6 +48,13 @@
                                     <a class="nav-link" href="{{ route('clientes.index') }}">Clientes</a>
                                 @endif
                             </li>
+                            <li class="nav-item">
+                                @if (Route::current()->getName() == 'productos.index')
+                                    <a class="nav-link" href="{{ route('productos.index') }}"><b>Ajax</b></a>
+                                @else
+                                    <a class="nav-link" href="{{ route('productos.index') }}">Ajax</a>
+                                @endif
+                            </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
