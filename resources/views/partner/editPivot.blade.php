@@ -25,7 +25,7 @@
                         </ul>
                     </div>
                     @endif
-                    <form class="form-horizontal" action="{{ route('partners.updatePivot', ['id' => $id, 'treatment_id' => $treatment_id, 'pivot_id' => $pivot_id]) }}" method="post">
+                    <form class="form-horizontal" action="{{ route('partners.updatePivot', ['partner_id' => $id, 'pivot_id' => $pivot_id]) }}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="mt-4">
@@ -35,7 +35,7 @@
                                         <label class="control-label col-sm-12" for="treatment">Tratamiento:</label>
                                         <div class="col-sm-12">
                                             <select name="treatment" id="treatment" class="col-sm-12">
-                                                <option value="null">Elegir tratamiento</option>
+                                                <option value="default">Elegir tratamiento</option>
                                                 @foreach($treatments as $id => $treatment)
                                                 <option value="{{ $id }}" {{ $id == $treatment_id ? 'selected' : '' }}> {{$treatment}}</option>
                                                 @endforeach

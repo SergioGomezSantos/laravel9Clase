@@ -52,7 +52,7 @@
                     <td>{{ $treatment->name }}</td>
                     <td>{{ $treatment->price }}</td>
                     <td>{{ $treatment->pivot->date }}</td>
-                    <td><a class="btn btn-dark" href="{{ route('partners.editPivot', ['id' => $partner->id, 'treatment_id' => $treatment->id, 'pivot_id' => $treatment->pivot->id, 'date' => $treatment->pivot->date]) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"> Editar</i></a></td>
+                    <td><a class="btn btn-dark" href="{{ route('partners.editPivot', ['partner_id' => $partner->id, 'pivot_id' => $treatment->pivot->id]) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"> Editar</i></a></td>
                     <td>
                         <form action="{{ route('partners.destroyPivot', ['id' => $partner->id, 'pivot_id' => $treatment->pivot->id]) }}" method="post">
                             @csrf

@@ -275,18 +275,26 @@ class PartnerController extends Controller
         }
     }
 
-    public function editPivot($id, $treatment_id, $pivot_id, $date)
+    public function editPivot($partner_id, $pivot_id)
     {    
-        $partner = Partner::find($id);
+        $partner = Partner::find($partner_id);
         
         $treatments = Treatment::whereHas('centers', function($center) {
             $center->where('center_id', '=', session('worker')['center_id']);
         })->pluck("name", 'id');
+
+        $treatment = $partner->treatments()->wherePivot('id', $pivot_id)->first();
         
-        return view('partner.editPivot', ['id' => $partner->id, 'treatments' => $treatments, 'treatment_id' => $treatment_id, 'pivot_id' =>$pivot_id, 'date' => $date]);
+        return view('partner.editPivot', [
+            'id' => $partner->id, 
+            'treatments' => $treatments, 
+            'treatment_id' => $treatment->id,
+            'date' => $treatment->pivot->date,
+            'pivot_id' => $pivot_id
+        ]);
     }
 
-    public function updatePivot(Request $request, $id, $treatment_id, $pivot_id)
+    public function updatePivot(Request $request, $id, $pivot_id)
     {
         $partner = Partner::find($id);
 
@@ -306,6 +314,20 @@ class PartnerController extends Controller
             
             foreach ($partner->treatments as $treatment) {
 
+                if ($treatment->pivot->id != $pivot_id && $treatment->pivot->date === $request->input('newDate')) {
+    
+                    $request->validate([
+                        'newDate' => 'unique:partner_treatment,date'
+                    ], [
+                        'newDate.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
+                    ]);
+                }
+            }
+
+                        
+            // TODO Cambair solo tipo tratamiento sin cambiar fecha
+            foreach ($partner->treatments as $treatment) {
+
                 if ($treatment->pivot->id !== $pivot_id && $treatment->pivot->date == $request->input('newDate')) {
     
                     $request->validate([
@@ -318,7 +340,14 @@ class PartnerController extends Controller
     
             try {
 
-                $partner->treatments()->wherePivot('id', $pivot_id)->updateExistingPivot($treatment_id, ['treatment_id' => $request->input('treatment'), 'date' => $request->input('newDate')]);
+                $partner->treatments()->wherePivot('id', $pivot_id)->updateExistingPivot(
+                    $partner->treatments()->wherePivot('id', $pivot_id)->first()->id, 
+                    [
+                        'treatment_id' => $request->input('treatment'), 
+                        'date' => $request->input('newDate')
+                    ]
+                );
+                
                 return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento Actualizado');
 
             } catch (Exception $e) {

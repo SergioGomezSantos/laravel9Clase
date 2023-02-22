@@ -23,6 +23,8 @@ class PartnerTreatmentSeeder extends Seeder
                 Partner::all()->random(10)->pluck('id')->toArray(),
                 ["date" => new DateTime()]
             );
+
+            //TODO sync con tratamientos de su centro
         });
     }
 }
