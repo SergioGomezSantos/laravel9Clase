@@ -33,6 +33,17 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                @if (Route::current()->getName() == 'partners.index')
+                                    <a class="nav-link" href="{{ route('partners.index') }}"><b>Socios</b></a>
+                                @else
+                                    <a class="nav-link" href="{{ route('partners.index') }}">Socios</a>
+                                @endif
+                            </li>
+                    </ul>
+
                     @if (Session::has('worker'))
 
                         <!-- Right Side Of Navbar -->
