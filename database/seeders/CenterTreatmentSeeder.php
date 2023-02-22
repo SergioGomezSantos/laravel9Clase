@@ -16,10 +16,8 @@ class CenterTreatmentSeeder extends Seeder
      */
     public function run()
     {
-        $centers = Center::all();
-
-        Treatment::factory()->count(23)->create()->each(function($treatment) use ($centers){
-            $treatment->centers()->sync($centers->random(2));
+        Treatment::factory()->count(23)->create()->each(function($treatment) {
+            $treatment->centers()->sync(Center::all()->random(2));
         });
     }
 }
