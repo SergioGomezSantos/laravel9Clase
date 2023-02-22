@@ -33,4 +33,6 @@ class Order extends Model
             fn ($value) => Carbon::parse($value)->format('d/m/Y'),
         );
     }
+
+    // protected $dateFormat = "d-m-Y H:i:s";
 }
