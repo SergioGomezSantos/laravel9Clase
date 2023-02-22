@@ -5,7 +5,6 @@
 <script>
     $(document).ready(function() {
         loadDataHtml();
-        alert("aa");
     });
 
     const loadDataHtml = function() {
