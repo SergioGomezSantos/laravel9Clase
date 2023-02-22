@@ -15,9 +15,14 @@ class ProductoController extends Controller
     public function index()
     {
         $this->authorize("viewAny", Product::class);
-        $products = Product::all();
-        return view('productos.index', ['products' => $products]);
+        return view('productos.index');
     }
+
+    public function indexhtml()
+    {
+        echo "aa";
+    }
+
 
     /**
      * Show the form for creating a new resource.

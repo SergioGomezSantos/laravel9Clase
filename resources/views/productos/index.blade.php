@@ -2,6 +2,24 @@
 
 @section('content')
 
+<script>
+    $(document).ready(function() {
+        loadDataHtml();
+        alert("aa");
+    });
+
+    const loadDataHtml = function() {
+
+        let url = "/productos/html"
+        $.get(url, function(data, status) {
+            $("#tablahtml").html(data);
+        })
+        .fail(function(e) {
+            console.log("Error" + e.status);
+        });
+    }
+</script>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -32,7 +50,9 @@
 
             <br>    
 
-            
+            <div id="tablahtml">
+            Tabla base
+            </div>
 
         </div>
     </div>

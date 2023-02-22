@@ -85,4 +85,6 @@ Route::resource('/clientes', ClienteController::class);
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get("/productos/html", [ProductoController::class, "indexhtml"]);
+Route::get("/productos/json", [ProductoController::class, "indexjson"]);
 Route::resource('productos', ProductoController::class);
