@@ -24,4 +24,11 @@ Route::get('/login', [LoginController::class, 'index'])->name('login.index');
 Route::post('/login', [LoginController::class, 'checkCredentials'])->name('login.checkCredentials');
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
 
-Route::get('/socios', [PartnerController::class, 'index'])->name('socios.index');
+//pivote
+Route::post('/partners/storePivot/{id}' , [PartnerController::class, 'storePivot'])->name('partners.storePivot');
+Route::get('/partners/{id}/{treatment_id}/{pivot_id}/{date}/editPivot' , [PartnerController::class, 'editPivot'])->name('partners.editPivot');
+Route::put('/partners/updatePivot/{id}/{treatment_id}/{pivot_id}' , [PartnerController::class, 'updatePivot'])->name('partners.updatePivot');
+Route::delete('/partners/destroyPivot/{id}/{pivot_id}' , [PartnerController::class, 'destroyPivot'])->name('partners.destroyPivot');
+
+//partner
+Route::resource('partners', PartnerController::class);
