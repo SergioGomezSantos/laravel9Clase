@@ -47,8 +47,13 @@ class LoginController extends Controller
 
                 if ($worker->password == $request->input('password')) {
     
-                    session(['worker' => [$worker->name, $worker->role]]);
-                    return redirect()->route("socios.index")->with('result', 'Inicio de Sesión Correcto');
+                    session(['worker' => [
+                        "name" => $worker->name, 
+                        "role" => $worker->role,
+                        "center_id" => $worker->center_id
+                        ]
+                    ]);
+                    return redirect()->route("partners.index")->with('result', 'Inicio de Sesión Correcto');
                 }
 
             } 

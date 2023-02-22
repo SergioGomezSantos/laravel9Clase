@@ -1,6 +1,8 @@
 @extends('layouts.centers')
 
-@section('title', 'Listado de productos')
+@section('title')
+    Crear Socio
+@endsection
 
 @section('content')
 <div class="container">
@@ -16,7 +18,7 @@
                     <!-- Mostrar errores -->
                     @if($errors->any())
                     <div class="alert alert-danger">
-                        <h6>Por favor corrige los siguientes errores:</h6>
+                        <h6>Por favor, corrige los siguientes errores:</h6>
                         <ul>
                             @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -67,7 +69,7 @@
                                 <div class="form-outline form-group">
                                     <label for="treatment">Tratamiento:</label>
                                     <select name="treatment" id="treatment" class="form-select" aria-label="Default select example">
-                                        <option value="null">Elegir tratamiento</option>
+                                        <option value="default">Elegir tratamiento</option>
                                         @foreach($treatments as $id => $treatment)
                                         <option value="{{ $id }}" {{ (old('treatment') == $id ? 'selected':'') }}> {{$treatment}}</option>
                                         @endforeach

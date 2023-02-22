@@ -39,11 +39,6 @@
             </table>
 
             <h1>Tratamientos de {{$partner->name}}</h1>
-            @if($message = Session::get('exito'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
-            @endif
             <table class="table table-striped text-center">
                 <tr>
                     <th>Nombre</th>
@@ -52,13 +47,11 @@
                     <th>Editar</th>
                     <th>Borrar</th>
                 </tr>
-                @php $totalPrice = 0; $num = 1; @endphp
-                @foreach($treatmentList as $treatment)
+                @foreach($partner->treatments as $treatment)
                 <tr>
                     <td>{{ $treatment->name }}</td>
                     <td>{{ $treatment->price }}</td>
                     <td>{{ $treatment->pivot->date }}</td>
-                    @php $totalPrice = $totalPrice + $treatment->price; @endphp
                     <td><a class="btn btn-dark" href="{{ route('partners.editPivot', ['id' => $partner->id, 'treatment_id' => $treatment->id, 'pivot_id' => $treatment->pivot->id, 'date' => $treatment->pivot->date]) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"> Editar</i></a></td>
                     <td>
                         <form action="{{ route('partners.destroyPivot', ['id' => $partner->id, 'pivot_id' => $treatment->pivot->id]) }}" method="post">
@@ -71,7 +64,7 @@
                 @endforeach
             </table>
             <div class="bg-secondary text-center text-white">
-                <h3>Dinero total gastado {{$totalPrice}} €</h3>
+                <h3>Dinero total gastado {{ $totalPrice }} €</h3>
             </div>
 
         </div>

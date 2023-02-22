@@ -20,7 +20,7 @@ class PartnerFactory extends Factory
     public function definition()
     {
         return [
-            "name" => $this->faker->name(),
+            "name" => $this->faker->firstName(),
             "surnames" => $this->faker->lastName() . " " . $this->faker->lastName(),
             "address" => $this->faker->address(),
             "phone" => $this->faker->phoneNumber(),

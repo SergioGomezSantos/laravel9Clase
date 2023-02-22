@@ -1,12 +1,16 @@
 @extends('layouts.centers')
 
+@section('title')
+    Editar Tratamiento
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header text-center">
-                    <h2>Añadir un nuevo tratamiento</h2>
+                    <h2>Editar tratamiento</h2>
                 </div>
                 <div class="card-body">
 

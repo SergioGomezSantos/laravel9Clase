@@ -1,18 +1,15 @@
 @extends('layouts.centers')
 
+@section('title')
+    Socios
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-
-            @if($message = Session::get('exito'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
-            @endif
             
-            <h1>Lista de socios</h1>
-            <h4>Hay {{ sizeof($partnerList) }} socios</h4>
+            <h1>Lista de Socios de {{ $centerName }} ( {{ sizeof($partners) }} )</h1>
 
             <a class="btn btn-outline-dark" href="{{ route('partners.create') }}">Nuevo socio</a>
 
@@ -28,7 +25,7 @@
                     <th>Borrar</th>
                 </tr>
 
-                @foreach($partnerList as $partner)
+                @foreach($partners as $partner)
                 <tr>
                     <td>{{ $partner->name }}</td>
                     <td>{{ $partner->surnames }}</td>
