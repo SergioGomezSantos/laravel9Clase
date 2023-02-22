@@ -27,7 +27,7 @@ class PartnerController extends Controller
 
         $centerName = Center::find(session('worker')['center_id'])->name;
 
-        return view('partner.index', ['partners' => $partners, 'centerName' => $centerName]);
+        return view('partners.index', ['partners' => $partners, 'centerName' => $centerName]);
     }
 
     /**
@@ -41,7 +41,7 @@ class PartnerController extends Controller
             $center->where('center_id', '=', session('worker')['center_id']);
         })->pluck("name", 'id');
 
-        return view('partner.create', compact('treatments'));
+        return view('partners.create', compact('treatments'));
     }
 
     /**
@@ -127,7 +127,7 @@ class PartnerController extends Controller
                 $center->where('center_id', '=', session('worker')['center_id']);
             })->pluck("name", 'id');
 
-            return view('partner.show', [
+            return view('partners.show', [
                 'partner' => $partner,
                 'totalPrice' => $totalPrice,
                 'treatments' => $treatments
@@ -148,7 +148,7 @@ class PartnerController extends Controller
     public function edit($id)
     {
         $partner = Partner::find($id);
-        return view('partner.edit', ['partner' => $partner]);
+        return view('partners.edit', ['partner' => $partner]);
     }
 
     /**
@@ -285,7 +285,7 @@ class PartnerController extends Controller
 
         $treatment = $partner->treatments()->wherePivot('id', $pivot_id)->first();
         
-        return view('partner.editPivot', [
+        return view('partners.editPivot', [
             'id' => $partner->id, 
             'treatments' => $treatments, 
             'treatment_id' => $treatment->id,
@@ -324,8 +324,6 @@ class PartnerController extends Controller
                 }
             }
 
-                        
-            // TODO Cambair solo tipo tratamiento sin cambiar fecha
             foreach ($partner->treatments as $treatment) {
 
                 if ($treatment->pivot->id !== $pivot_id && $treatment->pivot->date == $request->input('newDate')) {
