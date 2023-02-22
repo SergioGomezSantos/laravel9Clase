@@ -25,7 +25,7 @@ Route::post('/login', [LoginController::class, 'checkCredentials'])->name('login
 Route::post('/logout', [LoginController::class, 'logout'])->name('login.logout');
 
 //pivote
-Route::post('/partners/storePivot/{id}' , [PartnerController::class, 'storePivot'])->name('partners.storePivot');
+Route::post('/partners/{id}/storePivot' , [PartnerController::class, 'storePivot'])->name('partners.storePivot');
 Route::get('/partners/{partner_id}/{pivot_id}/edit' , [PartnerController::class, 'editPivot'])->name('partners.editPivot');
 Route::put('/partners/{partner_id}/{pivot_id}/update' , [PartnerController::class, 'updatePivot'])->name('partners.updatePivot');
 Route::delete('/partners/{id}/{pivot_id}' , [PartnerController::class, 'destroyPivot'])->name('partners.destroyPivot');
