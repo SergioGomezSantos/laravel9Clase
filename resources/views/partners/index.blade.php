@@ -8,10 +8,30 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            
-            <h1>Lista de Socios de {{ $centerName }} ( {{ sizeof($partners) }} )</h1>
 
-            <a class="btn btn-outline-dark" href="{{ route('partners.create') }}">Nuevo socio</a>
+            <br>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h1>Lista de Socios de {{ $centerName }} ( {{ sizeof($partners) }} )</h1>
+
+                <div class="d-flex align-items-center gap-1">
+
+                    @if ( Session::has('result') )
+                        <div class="alert alert-success boldText alertPosition" role="alert">
+                            {{ Session::get('result') }}
+                        </div>
+                    @elseif ( Session::has('error') )
+                        <div class="alert alert-danger boldText alertPosition" role="alert">
+                            {{ Str::limit(Session::get('error'), 100) }}
+                        </div>
+                    @endif
+
+                    <a class="btn btn-outline-dark" href="{{ route('partners.create') }}">Nuevo socio</a>
+                </div>
+            </div>
+            
+            <br>
 
             <table class="table table-striped text-center">
                 <tr>

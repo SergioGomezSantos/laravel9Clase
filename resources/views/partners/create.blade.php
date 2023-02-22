@@ -86,6 +86,7 @@
                         <br>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-dark col-md-3"><i class="fa fa-plus-circle" aria-hidden="true"> Añadir</i></button>
+                            <a class="btn btn-outline-dark col-md-3" href="{{ url()->previous() }}">Volver</a>
                         </div>
                     </form>
                 </div>

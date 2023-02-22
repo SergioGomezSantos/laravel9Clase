@@ -5,6 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
+                
                 <div class="card-header text-center">
                     <h1>Editar socio</h1>
                 </div>
@@ -62,6 +63,7 @@
                         <br>
                         <div class="form-group text-center">
                             <input type="submit" class="btn btn-dark col-md-3" value="Actualizar">
+                            <a class="btn btn-outline-dark col-md-3" href="{{ url()->previous() }}">Volver</a>
                         </div>
                     </form>
                 </div>
