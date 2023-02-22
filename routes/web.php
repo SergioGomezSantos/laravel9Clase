@@ -7,6 +7,7 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\StudiesController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ClienteController;
 use Illuminate\Support\Facades\Route;
 //use Illuminate\Support\Facades\Auth;
@@ -83,3 +84,5 @@ Route::resource('/clientes', ClienteController::class);
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::resource('productos', ProductoController::class);
