@@ -28,6 +28,7 @@
                     @endif
 
                     <a class="btn btn-outline-dark" href="{{ url()->previous() }}">Volver</a>
+                    <a class="btn btn-outline-dark" href="{{ route('partners.index') }}">Socios</a>
                 </div>
             </div>
             

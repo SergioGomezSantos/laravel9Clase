@@ -33,7 +33,8 @@ class PartnerController extends Controller
 
         }
 
-        abort(403);
+        // abort(403);
+        return redirect()->route("login.index")->with('error', 'Se necesita Iniciar Sesión');
     }
 
     /**
@@ -100,8 +101,8 @@ class PartnerController extends Controller
                 try {
     
                     $partner = Partner::create($request->all());
-                    $partner->treatments()->syncWithPivotValues($request->input('treatment'), ["date" => $request->input('date')]);
-                    $partner->centers()->attach([session('worker')['center_id']]);
+                    $partner->treatments()->attach($request->input('treatment'), ["date" => $request->input('date')]);
+                    $partner->centers()->attach(session('worker')['center_id']);
                     $partner->save();
                 
                 } catch (Exception $e) {

@@ -17,7 +17,9 @@ class LoginController extends Controller
     {
 
         if (session('worker')) {
-            return redirect()->route("home");
+
+            //abort(403);
+            return redirect()->route("partners.index")->with('error', 'Ya hay una Sesión Iniciada');
         }
 
         return view('login.index');
