@@ -79,7 +79,7 @@
                             <div class="col">
                                 <div class="form-outline form-group">
                                     <label for="date">Fecha:</label>
-                                    <input type="date" name="date" id="date" value="{{ old('date') }}" class="form-control" placeholder="{{Carbon\Carbon::now()}}">
+                                    <input type="date" name="date" id="date" value="{{ old('date') ? old('date') : date('Y-m-d', strtotime('+1 day')) }}" class="form-control">
                                 </div>
                             </div>
                         </div>

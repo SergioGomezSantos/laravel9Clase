@@ -21,13 +21,19 @@ class PartnerController extends Controller
     public function index()
     {
         
-        $partners = Partner::whereHas('centers', function($center) {
-            $center->where('center_id', '=', session('worker')['center_id']);
-        })->get();
+        if (session('worker')) {
 
-        $centerName = Center::find(session('worker')['center_id'])->name;
+            $partners = Partner::whereHas('centers', function($center) {
+                $center->where('center_id', '=', session('worker')['center_id']);
+            })->get();
+    
+            $centerName = Center::find(session('worker')['center_id'])->name;
+    
+            return view('partners.index', ['partners' => $partners, 'centerName' => $centerName]);
 
-        return view('partners.index', ['partners' => $partners, 'centerName' => $centerName]);
+        }
+
+        abort(403);
     }
 
     /**
@@ -37,11 +43,18 @@ class PartnerController extends Controller
      */
     public function create()
     {
-        $treatments = Treatment::whereHas('centers', function($center) {
-            $center->where('center_id', '=', session('worker')['center_id']);
-        })->pluck("name", 'id');
 
-        return view('partners.create', compact('treatments'));
+        if (session('worker')) {
+
+            $treatments = Treatment::whereHas('centers', function($center) {
+                $center->where('center_id', '=', session('worker')['center_id']);
+            })->pluck("name", 'id');
+    
+            return view('partners.create', compact('treatments'));
+
+        }
+
+        abort(403);
     }
 
     /**
@@ -52,58 +65,67 @@ class PartnerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'surnames' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'email' => 'required|email',
 
-        ], [
-            'name.required' => 'Debes introducir el nombre.',
-            'surnames.required' => 'Debes introducir los apellidos.',
-            'address.required' => 'Debes introducir la dirección.',
-            'phone.required' => 'Debes introducir el teléfono.',
-            'email.required' => 'Debes introducir el email.',
-            'email.email' => 'Debes introducir un email válido.'
-        ]);
-
-        if ($request->input('treatment') != "default" || $request->input('date')) {
-
+        if (session('worker')) {
+            
             $request->validate([
-                'treatment' => 'required',
-                'date' => 'required|date_format:Y-m-d|after:today'
-
+                'name' => 'required',
+                'surnames' => 'required',
+                'address' => 'required',
+                'phone' => 'required',
+                'email' => 'required|email',
+    
             ], [
-                'treatment.required' => 'Debes elegir una opción de tratamiento válida.',
-                'date.required' => 'Debes introducir una fecha.',
-                'date.date_format' => 'El formato de fecha no es válido.',
-                'date.after' => 'La fecha debe ser superior a la del día de hoy.'
+                'name.required' => 'Debes introducir el nombre.',
+                'surnames.required' => 'Debes introducir los apellidos.',
+                'address.required' => 'Debes introducir la dirección.',
+                'phone.required' => 'Debes introducir el teléfono.',
+                'email.required' => 'Debes introducir el email.',
+                'email.email' => 'Debes introducir un email válido.'
             ]);
-
-            try {
-
-                $partner = Partner::create($request->all());
-                $partner->treatments()->syncWithPivotValues($request->input('treatment'), ["date" => $request->input('date')]);
-            
-            } catch (Exception $e) {
-
-                return redirect()->route("partners.index")->with('error', 'Error al Crear. ' . $e->getMessage());
+    
+            if ($request->input('treatment') != "default" || $request->input('date')) {
+    
+                $request->validate([
+                    'treatment' => 'required',
+                    'date' => 'required|date_format:Y-m-d|after:today'
+    
+                ], [
+                    'treatment.required' => 'Debes elegir una opción de tratamiento válida.',
+                    'date.required' => 'Debes introducir una fecha.',
+                    'date.date_format' => 'El formato de fecha no es válido.',
+                    'date.after' => 'La fecha debe ser superior a la del día de hoy.'
+                ]);
+    
+                try {
+    
+                    $partner = Partner::create($request->all());
+                    $partner->treatments()->syncWithPivotValues($request->input('treatment'), ["date" => $request->input('date')]);
+                    $partner->centers()->attach([session('worker')['center_id']]);
+                    $partner->save();
+                
+                } catch (Exception $e) {
+    
+                    return redirect()->route("partners.index")->with('error', 'Error al Crear. ' . $e->getMessage());
+                }
+    
+            } else {
+    
+                try {
+    
+                    $partner = Partner::create($request->all());
+                
+                } catch (Exception $e) {
+    
+                    return redirect()->route("partners.index")->with('error', 'Error al Crear. ' . $e->getMessage());
+                }
             }
+    
+            return redirect()->route('partners.index')->with('result', 'Socio Creado');
 
-        } else {
-
-            try {
-
-                $partner = Partner::create($request->all());
-            
-            } catch (Exception $e) {
-
-                return redirect()->route("partners.index")->with('error', 'Error al Crear. ' . $e->getMessage());
-            }
         }
 
-        return redirect()->route('partners.index')->with('result', 'Socio Creado');
+        abort(403);
     }
 
     /**
@@ -114,29 +136,36 @@ class PartnerController extends Controller
      */
     public function show($id)
     {
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
 
-        if ($partner) {
+            $partner = Partner::find($id);
 
-            $totalPrice = 0;
-            foreach ($partner->treatments as $treatment) {
-                $totalPrice += $treatment->price;
+            if ($partner) {
+
+                $totalPrice = 0;
+                foreach ($partner->treatments as $treatment) {
+                    $totalPrice += $treatment->price;
+                }
+
+                $treatments = Treatment::whereHas('centers', function($center) {
+                    $center->where('center_id', '=', session('worker')['center_id']);
+                })->pluck("name", 'id');
+
+                return view('partners.show', [
+                    'partner' => $partner,
+                    'totalPrice' => $totalPrice,
+                    'treatments' => $treatments
+                ]);
+
+            } else {
+
+                return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
             }
 
-            $treatments = Treatment::whereHas('centers', function($center) {
-                $center->where('center_id', '=', session('worker')['center_id']);
-            })->pluck("name", 'id');
-
-            return view('partners.show', [
-                'partner' => $partner,
-                'totalPrice' => $totalPrice,
-                'treatments' => $treatments
-            ]);
-
-        } else {
-
-            return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
         }
+
+        abort(403);
     }
 
     /**
@@ -147,8 +176,15 @@ class PartnerController extends Controller
      */
     public function edit($id)
     {
-        $partner = Partner::find($id);
-        return view('partners.edit', ['partner' => $partner]);
+        // TODO
+        if (session('worker')) {
+
+            $partner = Partner::find($id);
+            return view('partners.edit', ['partner' => $partner]);
+
+        }
+
+        abort(403);
     }
 
     /**
@@ -160,46 +196,53 @@ class PartnerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
+
+            $partner = Partner::find($id);
         
-        if ($partner) {
+            if ($partner) {
 
-            $request->validate([
-                'name' => 'required',
-                'surnames' => 'required',
-                'address' => 'required',
-                'phone' => 'required',
-                'email' => 'required|email'
-    
-            ], [
-                'name.required' => 'Debes introducir el nombre.',
-                'surnames.required' => 'Debes introducir los apellidos.',
-                'address.required' => 'Debes introducir la dirección.',
-                'phone.required' => 'Debes introducir el teléfono.',
-                'email.required' => 'Debes introducir el email.',
-                'email.email' => 'Debes introducir un email válido.'
-            ]);
+                $request->validate([
+                    'name' => 'required',
+                    'surnames' => 'required',
+                    'address' => 'required',
+                    'phone' => 'required',
+                    'email' => 'required|email'
+        
+                ], [
+                    'name.required' => 'Debes introducir el nombre.',
+                    'surnames.required' => 'Debes introducir los apellidos.',
+                    'address.required' => 'Debes introducir la dirección.',
+                    'phone.required' => 'Debes introducir el teléfono.',
+                    'email.required' => 'Debes introducir el email.',
+                    'email.email' => 'Debes introducir un email válido.'
+                ]);
 
-            $partner->name = $request->input('name');
-            $partner->surnames = $request->input('surnames');
-            $partner->address = $request->input('address');
-            $partner->phone = $request->input('phone');
-            $partner->email = $request->input('email');
+                $partner->name = $request->input('name');
+                $partner->surnames = $request->input('surnames');
+                $partner->address = $request->input('address');
+                $partner->phone = $request->input('phone');
+                $partner->email = $request->input('email');
 
-            try {
-                
-                $partner->update();
-                return redirect()->route("partners.show", ['partner' => $partner])->with('result', 'Socio Editado');
+                try {
+                    
+                    $partner->update();
+                    return redirect()->route("partners.show", ['partner' => $partner])->with('result', 'Socio Editado');
 
-            } catch (Exception $e) {
+                } catch (Exception $e) {
 
-                return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Editar. ' . $e->getMessage());
+                    return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Editar. ' . $e->getMessage());
+                }
+
+            } else {
+
+                return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
             }
 
-        } else {
-
-            return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
         }
+
+        abort(403);
     }
 
     /**
@@ -210,144 +253,203 @@ class PartnerController extends Controller
      */
     public function destroy($id)
     {
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
 
-        if ($partner) {
+            if (session('worker')["role"] === 'admin') {
+
+                $partner = Partner::find($id);
+
+                if ($partner) {
+                    
+                    try {
+
+                        $partner->treatments()->detach($id);
+                        $partner->delete();
+
+                        return redirect()->route('partners.index')->with('result', 'Socio Eliminado');
             
-            try {
+                    } catch (Exception $e) {
+            
+                        return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Eliminar. ' . $e->getMessage());
+                    }
 
-                $partner->treatments()->detach($id);
-                $partner->delete();
+                } else {
 
-                return redirect()->route('partners.index')->with('result', 'Socio Eliminado');
-    
-            } catch (Exception $e) {
-    
-                return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Eliminar. ' . $e->getMessage());
+                    return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
+                }   
             }
 
-        } else {
+        }
 
-            return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
-        }        
+        abort(403);
     }
 
 
 
     public function storePivot(Request $request, $id)
     {   
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
 
-        if ($partner) {
+            $partner = Partner::find($id);
 
-            $request->validate([
-                'treatment' => 'required|not_regex:/default/',
-                'date' => 'required|date_format:Y-m-d|after:today'
-            ], [
-                'treatment.required' => 'Debes elegir un tratamiento.',
-                'treatment.not_regex' => 'Debes elegir un tratamiento.',
-                'date.required' => 'Debes introducir una fecha.',
-                'date.date_format' => 'El formato de fecha no es válido.',
-                'date.after' => 'La fecha debe ser superior a la del día de hoy.'
-            ]);
-            
-            foreach ($partner->treatments as $treatment) {
+            if ($partner) {
 
-                if ($treatment->pivot->date == $request->input('date')) {
-    
-                    $request->validate([
-                        'date' => 'unique:partner_treatment,date'
-                    ], [
-                        'date.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
-                    ]);
+                $request->validate([
+                    'treatment' => 'required|not_regex:/default/',
+                    'date' => 'required|date_format:Y-m-d|after:today'
+                ], [
+                    'treatment.required' => 'Debes elegir un tratamiento.',
+                    'treatment.not_regex' => 'Debes elegir un tratamiento.',
+                    'date.required' => 'Debes introducir una fecha.',
+                    'date.date_format' => 'El formato de fecha no es válido.',
+                    'date.after' => 'La fecha debe ser superior a la del día de hoy.'
+                ]);
+                
+                foreach ($partner->treatments as $treatment) {
+
+                    if ($treatment->pivot->date == $request->input('date')) {
+        
+                        $request->validate([
+                            'date' => 'unique:partner_treatment,date'
+                        ], [
+                            'date.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
+                        ]);
+                    }
                 }
-            }
-    
-            try {
+        
+                try {
 
-                $partner->treatments()->attach($request->input('treatment'), ["date" => $request->input('date')]);
-                return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento Añadido');
+                    $partner->treatments()->attach($request->input('treatment'), ["date" => $request->input('date')]);
+                    return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento Añadido');
 
-            } catch (Exception $e) {
+                } catch (Exception $e) {
 
-                return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Añadir Tratamiento. ' . $e->getMessage());
+                    return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Añadir Tratamiento. ' . $e->getMessage());
+                }
+
+            } else {
+
+                return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
             }
         }
+
+        abort(403);
     }
 
     public function editPivot($partner_id, $pivot_id)
     {    
-        $partner = Partner::find($partner_id);
-        
-        $treatments = Treatment::whereHas('centers', function($center) {
-            $center->where('center_id', '=', session('worker')['center_id']);
-        })->pluck("name", 'id');
+        // TODO
+        if (session('worker')) {
 
-        $treatment = $partner->treatments()->wherePivot('id', $pivot_id)->first();
+            $partner = Partner::find($partner_id);
         
-        return view('partners.editPivot', [
-            'id' => $partner->id, 
-            'treatments' => $treatments, 
-            'treatment_id' => $treatment->id,
-            'date' => $treatment->pivot->date,
-            'pivot_id' => $pivot_id
-        ]);
+            if ($partner) {
+
+                $treatments = Treatment::whereHas('centers', function($center) {
+                    $center->where('center_id', '=', session('worker')['center_id']);
+                })->pluck("name", 'id');
+    
+                $treatment = $partner->treatments()->wherePivot('id', $pivot_id)->first();
+                
+                if ($treatment) {
+
+                    return view('partners.editPivot', [
+                        'id' => $partner->id, 
+                        'treatments' => $treatments, 
+                        'treatment_id' => $treatment->id,
+                        'date' => $treatment->pivot->date,
+                        'pivot_id' => $pivot_id
+                    ]);
+                    
+                }  else {
+
+                    return redirect()->route("partners.index")->with('error', 'Tratamiento no Encontrado');
+                }
+
+            } else {
+
+                return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
+            }
+
+        }
+
+        abort(403);
     }
 
     public function updatePivot(Request $request, $id, $pivot_id)
     {
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
 
-        if ($partner) {
+            $partner = Partner::find($id);
 
-            $request->validate([
-                'treatment' => 'required|not_regex:/default/',
-                'newDate' => 'required|date_format:Y-m-d|after:today'
-            ], [
-                'treatment.required' => 'Debes elegir un tratamiento.',
-                'treatment.not_regex' => 'Debes elegir un tratamiento.',
-                'newDate.required' => 'Debes introducir una fecha.',
-                'newDate.date_format' => 'El formato de fecha no es válido.',
-                'newDate.after' => 'La fecha debe ser superior a la del día de hoy.',
-                
-            ]);
-            
-            foreach ($partner->treatments as $treatment) {
-
-                if ($treatment->pivot->id != $pivot_id && $treatment->pivot->date === $request->input('newDate')) {
+            if ($partner) {
     
-                    $request->validate([
-                        'newDate' => 'unique:partner_treatment,date'
-                    ], [
-                        'newDate.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
-                    ]);
+                $request->validate([
+                    'treatment' => 'required|not_regex:/default/',
+                    'newDate' => 'required|date_format:Y-m-d|after:today'
+                ], [
+                    'treatment.required' => 'Debes elegir un tratamiento.',
+                    'treatment.not_regex' => 'Debes elegir un tratamiento.',
+                    'newDate.required' => 'Debes introducir una fecha.',
+                    'newDate.date_format' => 'El formato de fecha no es válido.',
+                    'newDate.after' => 'La fecha debe ser superior a la del día de hoy.',
+                    
+                ]);
+                
+                foreach ($partner->treatments as $treatment) {
+    
+                    if ($treatment->pivot->id != $pivot_id && $treatment->pivot->date === $request->input('newDate')) {
+        
+                        $request->validate([
+                            'newDate' => 'unique:partner_treatment,date'
+                        ], [
+                            'newDate.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
+                        ]);
+                    }
                 }
-            }
+        
+                try {
     
-            try {
-
-                $partner->treatments()->wherePivot('id', $pivot_id)->updateExistingPivot(
-                    $partner->treatments()->wherePivot('id', $pivot_id)->first()->id, 
-                    [
-                        'treatment_id' => $request->input('treatment'), 
-                        'date' => $request->input('newDate')
-                    ]
-                );
+                    $partner->treatments()->wherePivot('id', $pivot_id)->updateExistingPivot(
+                        $partner->treatments()->wherePivot('id', $pivot_id)->first()->id, 
+                        [
+                            'treatment_id' => $request->input('treatment'), 
+                            'date' => $request->input('newDate')
+                        ]
+                    );
+                    
+                    return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento Actualizado');
+    
+                } catch (Exception $e) {
+    
+                    return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Actualizar Tratamiento. ' . $e->getMessage());
+                }
                 
-                return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento Actualizado');
-
-            } catch (Exception $e) {
-
-                return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Actualizar Tratamiento. ' . $e->getMessage());
+            }  else {
+    
+                return redirect()->route("partners.index")->with('error', 'Socio no Encontrado');
             }
+
         }
+
+        abort(403);
     }
 
     public function destroyPivot($id, $pivot_id)
     {
-        $partner = Partner::find($id);
+        // TODO
+        if (session('worker')) {
 
-        $partner->treatments()->wherePivot('id', $pivot_id)->detach();
-        return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento eliminado correctamente');
+            $partner = Partner::find($id);
+
+            $partner->treatments()->wherePivot('id', $pivot_id)->detach();
+            return redirect()->route('partners.show', $partner->id)->with('result', 'Tratamiento eliminado correctamente');
+
+        }
+
+        abort(403);
     }
 }

@@ -132,7 +132,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label col-sm-12" for="date">Fecha:</label>
-                                <input type="date" class="form-control" name="date" id="date" value = "{{ date('Y-m-d', strtotime('+1 day'))}}">
+                                <input type="date" class="form-control" name="date" id="date" value = "{{ date('Y-m-d', strtotime('+1 day')) }}">
                             </div>
                         </div>
                     </div>
