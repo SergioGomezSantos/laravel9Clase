@@ -17,7 +17,7 @@
                     <!-- Mostrar errores -->
                     @if($errors->any())
                     <div class="alert alert-danger">
-                        <h6>Por favor corrige los siguientes errores:</h6>
+                        <h6>Por favor, corrige los siguientes errores:</h6>
                         <ul>
                             @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -44,14 +44,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label col-sm-2" for="newDate">Fecha:</label>
-                                        <input type="date" class="form-control" name="newDate" id="newDate" value="{{ $date }}" placeholder="{{Carbon\Carbon::now()}}">
+                                        <input type="date" class="form-control" name="newDate" id="newDate" value="{{ $date }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-dark col-md-3"><i class="fa fa-plus-circle" aria-hidden="true"> Añadir</i></button>
+                            <button type="submit" class="btn btn-dark col-md-3"><i class="fa fa-plus-circle" aria-hidden="true">Editar</i></button>
                             <a class="btn btn-outline-dark col-md-3" href="{{ url()->previous() }}">Volver</a>
                         </div>
                     </form>

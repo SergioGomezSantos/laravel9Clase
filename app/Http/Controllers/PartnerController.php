@@ -323,18 +323,6 @@ class PartnerController extends Controller
                     ]);
                 }
             }
-
-            foreach ($partner->treatments as $treatment) {
-
-                if ($treatment->pivot->id !== $pivot_id && $treatment->pivot->date == $request->input('newDate')) {
-    
-                    $request->validate([
-                        'newDate' => 'unique:partner_treatment,date'
-                    ], [
-                        'newDate.unique' => 'No puedes añadir un tratamiento con la misma fecha.'
-                    ]);
-                }
-            }
     
             try {
 
@@ -350,7 +338,6 @@ class PartnerController extends Controller
 
             } catch (Exception $e) {
 
-                // TODO Redirect a editar pivot
                 return redirect()->route("partners.show", ['partner' => $partner])->with('error', 'Error al Actualizar Tratamiento. ' . $e->getMessage());
             }
         }

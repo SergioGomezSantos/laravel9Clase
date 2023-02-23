@@ -13,7 +13,7 @@
 
             <div class="d-flex justify-content-between align-items-center">
 
-                <h1>Lista de Socios de {{ $centerName }} ( {{ sizeof($partners) }} )</h1>
+                <h1>Socios de {{ $centerName }} ( {{ sizeof($partners) }} )</h1>
 
                 <div class="d-flex align-items-center gap-1">
 

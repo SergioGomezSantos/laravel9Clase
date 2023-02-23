@@ -35,8 +35,8 @@ class LoginController extends Controller
             "name" => "required",
             "password" => "required"
         ], [
-            "name.required" => "<b>Nombre</b> es obligatorio",
-            "password.required" => "<b>Contraseña</b> es obligatoria"
+            "name.required" => "Nombre es obligatorio",
+            "password.required" => "Contraseña es obligatoria"
         ]);
 
         try {

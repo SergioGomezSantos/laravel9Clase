@@ -27,7 +27,7 @@
                         </div>
                     @endif
 
-                    <a class="btn btn-outline-dark col-md-3" href="{{ url()->previous() }}">Volver</a>
+                    <a class="btn btn-outline-dark" href="{{ url()->previous() }}">Volver</a>
                 </div>
             </div>
             
@@ -106,7 +106,7 @@
             <!-- Mostrar errores -->
             @if($errors->any())
             <div class="alert alert-danger">
-                <h6>Por favor corrige los siguientes errores:</h6>
+                <h6>Por favor, corrige los siguientes errores:</h6>
                 <ul>
                     @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -123,7 +123,7 @@
                                 <label class="control-label col-sm-12" for="treatment">Tratamiento:</label>
                                 <div class="col-sm-12">
                                     <select name="treatment" id="treatment" class="col-sm-12">
-                                        <option value="null">Elegir tratamiento</option>
+                                        <option value="default">Elegir tratamiento</option>
                                         @foreach($treatments as $id => $treatment)
                                         <option value="{{ $id }}" {{ (old('treatment') == $id ? 'selected':'') }}> {{$treatment}}</option>
                                         @endforeach
@@ -132,7 +132,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label col-sm-12" for="date">Fecha:</label>
-                                <input type="date" class="form-control col-sm-12" name="date" id="date" value="{{ old('date') }}" placeholder="{{Carbon\Carbon::now()}}">
+                                <input type="date" class="form-control" name="date" id="date" value = "{{ date('Y-m-d', strtotime('+1 day'))}}">
                             </div>
                         </div>
                     </div>

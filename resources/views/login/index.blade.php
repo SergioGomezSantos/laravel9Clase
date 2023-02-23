@@ -13,11 +13,13 @@
 
             <br>
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="card">
 
-                <h1>Introduce tus Credenciales</h1>
+                <div class="card-header text-center">
+                    <h1>Introduce tus Credenciales</h1>
+                </div>
 
-                <div class="d-flex align-items-center gap-1">
+                <div class="card-body">
 
                     @if ( Session::has('result') )
                         <div class="alert alert-success boldText alertPosition" role="alert">
@@ -28,46 +30,41 @@
                             {{ Str::limit(Session::get('error'), 100) }}
                         </div>
                     @endif
-                    
-                </div>
-            </div>
 
-            <form action="{{ route('login.checkCredentials') }}" method="POST">
-
-                <br>
-
-                @csrf
-
-                <div class="row">
-                    <div class="col-4">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="name" class="form-control bg-white" name="name">
+                    @if($errors->any())
+                    <div class="alert alert-danger">
+                        <h6>Por favor, corrige los siguientes errores:</h6>
+                        <ul>
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
+                    @endif
+
+                    <form class="form-horizontal" action="{{ route('login.checkCredentials') }}" method="post">
+                        @csrf
+                        <div class="mt-4">
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="control-label col-sm-12" for="treatment">Nombre:</label>
+                                        <input type="text" id="name" class="form-control bg-white col-sm-12" name="name" value="{{ old('name') }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label" for="password">Contraseña</label>
+                                        <input type="password" id="password" class="form-control bg-white col-sm-12" name="password">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <p class="text-center">
+                            <button type="submit" class="btn btn-dark col-md-2">Iniciar Sesión</button>
+                        </p>
+                    </form>
                 </div>
-
-                <br>
-
-                <div class="row">
-                    <div class="col-4">
-                        <label for="precio">Contraseña</label>
-                        <input type="password" id="password" class="form-control bg-white" name="password">
-                    </div>
-                </div>
-
-                <br>
-
-                <input type="submit" class="btn btn-primary boldText floatRight" value="Iniciar Sesión">
-            </form>
-
-            <br>
-
-            @if($errors->any())
-
-                <div class="d-flex gap-1">
-                    {!! implode('', $errors->all('<div class="alert alert-danger alertPosition" role="alert">:message</div>')) !!}
-                </div>
-
-            @endif
+        </div>
         </div>
     </div>
 </div>
