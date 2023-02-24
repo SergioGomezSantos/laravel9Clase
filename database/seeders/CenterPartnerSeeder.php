@@ -17,9 +17,7 @@ class CenterPartnerSeeder extends Seeder
     public function run()
     {
         Partner::factory()->count(80)->create()->each(function($partner){
-            $partner->centers()->sync(
-                Center::all()->random(2)
-            );
+            $partner->centers()->sync(Center::all()->random(2));
         });
     }
 }

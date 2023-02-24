@@ -20,8 +20,10 @@ class CenterFactory extends Factory
      */
     public function definition()
     {
+        // Añadir la funcionalidad en Español de Faker
         $this->faker->addProvider(new Person_ES($this->faker));
 
+        // Crear random parar crear peluqueria/centro de estética. Cada uno rellena 2 columnas nullable distintas
         $random = rand(0,1);
         
         if ($random == 0){

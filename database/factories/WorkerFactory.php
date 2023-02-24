@@ -21,6 +21,7 @@ class WorkerFactory extends Factory
      */
     public function definition()
     {
+        // Añadir la funcionalidad en Español de Faker
         $this->faker->addProvider(new Person_ES($this->faker));
 
         return [

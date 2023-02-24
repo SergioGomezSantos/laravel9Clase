@@ -75,7 +75,7 @@
                     <th>Editar</th>
                     <th>Borrar</th>
                 </tr>
-                @foreach($partner->treatments as $treatment)
+                @foreach($treatments as $treatment)
                 <tr>
                     <td>{{ $treatment->name }}</td>
                     <td>{{ $treatment->price }}</td>
@@ -125,7 +125,7 @@
                                 <div class="col-sm-12">
                                     <select name="treatment" id="treatment" class="col-sm-12">
                                         <option value="default">Elegir tratamiento</option>
-                                        @foreach($treatments as $id => $treatment)
+                                        @foreach($treatmentsCenter as $id => $treatment)
                                         <option value="{{ $id }}" {{ (old('treatment') == $id ? 'selected':'') }}> {{$treatment}}</option>
                                         @endforeach
                                     </select>

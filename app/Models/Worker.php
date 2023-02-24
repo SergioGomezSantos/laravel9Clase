@@ -9,6 +9,7 @@ class Worker extends Model
 {
     use HasFactory;
 
+    // 1:N Centers
     public function center(){
         return $this->belongsTo(Center::class);
     }

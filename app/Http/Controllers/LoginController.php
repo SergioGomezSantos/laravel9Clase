@@ -16,12 +16,14 @@ class LoginController extends Controller
     public function index()
     {
 
+        // Si ya existe una sesión
         if (session('worker')) {
 
-            //abort(403);
+            //Redirige a Socios
             return redirect()->route("partners.index")->with('error', 'Ya hay una Sesión Iniciada');
         }
 
+        //Si no existe, devuelve la vista de login
         return view('login.index');
     }
 
@@ -33,6 +35,8 @@ class LoginController extends Controller
      */
     public function checkCredentials(Request $request)
     {
+        // Validación de los campos del formulario
+
         $request->validate([
             "name" => "required",
             "password" => "required"
@@ -43,18 +47,24 @@ class LoginController extends Controller
 
         try {
 
+            // Busca en BD un trabajador con el nombre introducido (unique en BD)
             $worker = Worker::where('name', $request->input('name'))->first();
 
+            // Si existe el trabajador
             if ($worker) {
 
+                // Si la contraseña del trabajador coincide con la insertada en el formulario
                 if ($worker->password == $request->input('password')) {
     
+                    // Establer sesión con 3 datos que se usarán en los demás métodos
                     session(['worker' => [
                         "name" => $worker->name, 
                         "role" => $worker->role,
                         "center_id" => $worker->center_id
                         ]
                     ]);
+
+                    // Redirect a Socios con la sesión iniciada
                     return redirect()->route("partners.index")->with('result', 'Inicio de Sesión Correcto');
                 }
 
@@ -64,6 +74,7 @@ class LoginController extends Controller
 
         } catch(Exception $e) {
 
+            // Si falla por error general, redirect al index con el error
             return redirect()->route("login.index")->with('error', 'Error al Loggear. ' . $e->getMessage());
         }
     }
@@ -75,6 +86,7 @@ class LoginController extends Controller
      */
     public function logout() {
 
+        // Borrar la sesión y redirigir a home
         session()->forget('worker');
         return redirect()->route("home");
     }
