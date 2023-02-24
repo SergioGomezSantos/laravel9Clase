@@ -71,9 +71,9 @@
                 </div>
 
                 <div class="flex justify-center mt-4 sm:items-center sm:justify-between text-sm text-gray-500 sm:text-left">
-                    <p class="ml-1 underline">Nombre 1</p>
-                    <p class="ml-1 underline">Nombre 2</p>
-                    <p class="ml-1 underline">Nombre 3</p>
+                    <p class="ml-1 underline">Eduardo Casamián</p>
+                    <p class="ml-1 underline">Sergio Gómez</p>
+                    <p class="ml-1 underline">Pablo Traín</p>
                 </div>
             </div>
         </div>
